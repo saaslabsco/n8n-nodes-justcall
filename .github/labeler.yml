@@ -1,0 +1,89 @@
+bugfix:
+  - head-branch: ["^bugfix", "bugfix"]
+
+hotfix:
+  - head-branch: ["^hotfix", "hotfix"]
+
+feature:
+  - head-branch: ["^feature", "feature"]
+
+release:
+  - base-branch: ["master"]
+
+enhancement:
+  - head-branch: ["^task", "task"]
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**", "Jenkinsfile"]
+
+k8:
+  - changed-files:
+      - any-glob-to-any-file: ["values*.yml"]
+
+docker:
+  - changed-files:
+      - any-glob-to-any-file: ["Dockerfile*"]
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          ["tsconfig*.json", ".husky/*", ".eslintrc", ".prettierrc", ".npmrc"]
+
+go:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.go"]
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          [
+            "**/package.json",
+            "**/package-lock.json",
+            "**/yarn.lock",
+            "**/pnpm-lock.yaml",
+            "**/bun.lockb",
+            "**/bun.lock",
+            "**/go.mod",
+            "**/go.sum",
+            "**/requirements.txt",
+            "**/pyproject.toml",
+            "**/poetry.lock",
+            "**/Pipfile",
+            "**/Pipfile.lock",
+          ]
+
+php:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.php"]
+
+python:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.py"]
+
+bash:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.sh"]
+
+javascript:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.js", "**/**.jsx"]
+
+typescript:
+  - changed-files:
+      - any-glob-to-any-file: ["**/**.ts", "**/**.tsx"]
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          [
+            "**/**.test.js",
+            "**/**.test.jsx",
+            "**/**.test.ts",
+            "**/**.test.tsx",
+            "**/**.spec.js",
+            "**/**.spec.jsx",
+            "**/**.spec.ts",
+            "**/**.spec.tsx",
+            "**/**_test.go",
+          ]
