@@ -1,0 +1,11 @@
+name: Validate Git Hygiene
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - master
+
+jobs:
+  git-hygiene:
+    uses: saaslabsco/ci-workflows/.github/workflows/git-hygiene-reusable.yml@master
+    name: Validate Git Hygiene
