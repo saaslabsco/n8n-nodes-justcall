@@ -1,0 +1,34 @@
+# Source files
+nodes/
+credentials/
+tsconfig.json
+.eslintrc.js
+.prettierrc
+
+# Development files
+*.ts
+!*.d.ts
+
+# Tests
+test/
+*.test.*
+*.spec.*
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Documentation
+docs/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
