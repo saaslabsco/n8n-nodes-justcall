@@ -1,0 +1,63 @@
+{
+  "name": "n8n-nodes-justcall",
+  "version": "1.0.0",
+  "description": "n8n community node to interact with JustCall Calls API",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "justcall",
+    "calls",
+    "api"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/saaslabsco/n8n-nodes-justcall",
+  "author": {
+    "name": "JustCall Dev",
+    "email": "dev@justcall.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saaslabsco/n8n-nodes-justcall.git"
+  },
+  "main": "dist/nodes/JustCall/JustCall.node.js",
+  "scripts": {
+    "build": "tsc && npm run copy:icons",
+    "copy:icons": "cp nodes/JustCall/justcall.svg dist/nodes/JustCall/",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials --ext .ts",
+    "lintfix": "eslint nodes credentials --ext .ts --fix",
+    "prepublishOnly": "npm run build && npm run lint",
+    "changeset": "changeset",
+    "version": "changeset version && npm run build",
+    "release": "npm run build && changeset publish"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/JustCallApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/JustCall/JustCall.node.js",
+      "dist/nodes/JustCall/JustCallTrigger.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-n8n-nodes-base": "^1.11.0",
+    "prettier": "^2.7.1",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "overrides": {
+    "form-data": "^4.0.4"
+  }
+}

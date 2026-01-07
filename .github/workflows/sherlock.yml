@@ -1,0 +1,15 @@
+name: Sherlock
+on:
+  issue_comment:
+    types: [created, edited]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request:
+    types: [opened]
+
+jobs:
+  sherlock:
+    uses: saaslabsco/ci-workflows/.github/workflows/sherlock.yml@master
+    secrets: inherit
