@@ -79,7 +79,7 @@ export async function justcallApiRequestAllItems(
 	const returnData: any[] = [];
 	let responseData;
 
-	qs.page = 1;
+	qs.page = 0;
 	qs.per_page = 100;
 
 	let hasMorePages = true;
@@ -94,9 +94,9 @@ export async function justcallApiRequestAllItems(
 		// Check if there are more pages
 		if (
 			!responseData.meta ||
-			!responseData.meta.current_page ||
-			!responseData.meta.total_pages ||
-			responseData.meta.current_page >= responseData.meta.total_pages
+			responseData.meta.current_page === undefined ||
+			responseData.meta.total_pages === undefined ||
+			responseData.meta.current_page >= responseData.meta.total_pages - 1
 		) {
 			hasMorePages = false;
 		} else {
