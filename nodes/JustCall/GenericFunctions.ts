@@ -32,7 +32,7 @@ export async function justcallApiRequest(
 		method,
 		body,
 		qs,
-		uri: `${JUSTCALL_BASE_URL}${endpoint}`,
+		url: `${JUSTCALL_BASE_URL}${endpoint}`,
 		json: true,
 		headers: {
 			Authorization: `${credentials.apiKey}:${credentials.apiSecret}`,
@@ -49,7 +49,7 @@ export async function justcallApiRequest(
 	}
 
 	try {
-		return await this.helpers.requestWithAuthentication.call(this, 'justCallApi', options);
+		return await this.helpers.httpRequestWithAuthentication.call(this, 'justCallApi', options as any);
 	} catch (error) {
 		// Sanitize error to prevent credential leakage
 		const apiKey = credentials.apiKey as string;

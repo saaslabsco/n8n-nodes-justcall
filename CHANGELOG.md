@@ -1,5 +1,11 @@
 # n8n-nodes-justcall
 
+## 1.0.2
+
+### Patch Changes
+
+- Removed console statements and community checks update
+
 ## 1.0.1
 
 ### Patch Changes
