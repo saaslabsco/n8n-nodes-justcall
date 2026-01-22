@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-justcall",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "n8n community node to interact with JustCall Calls API",
   "keywords": [
     "n8n-community-node-package",

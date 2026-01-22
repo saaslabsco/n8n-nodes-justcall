@@ -72,7 +72,6 @@ export async function createWebhook(
 	event: string,
 ): Promise<boolean> {
 	if (!webhookUrl || !event) {
-		console.error('Cannot create webhook: webhookUrl or event is missing');
 		return false;
 	}
 
@@ -94,7 +93,6 @@ export async function createWebhook(
 	} catch (error) {
 		// Log error but return true to allow manual webhook setup
 		// This allows the workflow to activate even if automatic creation fails
-		console.error('Failed to create JustCall webhook:', error);
 		return true;
 	}
 }
@@ -108,7 +106,6 @@ export async function deleteWebhook(
 	webhookUrl: string,
 	event: string,
 ): Promise<boolean> {
-	console.log('deleteWebhook', webhookUrl, event);
 	if (!webhookUrl || !event) {
 		// Can't delete without webhook URL or event
 		return false;
@@ -129,7 +126,6 @@ export async function deleteWebhook(
 				if (webhook.type === event) {
 					// Check if webhook URL exists in the webhook_urls array
 					if (webhook.webhook_urls && Array.isArray(webhook.webhook_urls)) {
-						console.log('webhook.webhook_urls', webhook.webhook_urls);
 						for (const urlEntry of webhook.webhook_urls) {
 							if (urlEntry.webhook_url === webhookUrl && urlEntry.url_id) {
 								// Delete the webhook URL using the url_id
@@ -144,7 +140,6 @@ export async function deleteWebhook(
 									return true;
 								} catch (deleteError) {
 									// Log error but continue trying other webhooks
-									console.error('Failed to delete webhook URL:', deleteError);
 								}
 							}
 						}
@@ -155,7 +150,6 @@ export async function deleteWebhook(
 	} catch (error) {
 		// If deletion fails, log but don't throw
 		// Return false to indicate deletion may not have succeeded
-		console.error('Failed to delete JustCall webhook:', error);
 		return false;
 	}
 
