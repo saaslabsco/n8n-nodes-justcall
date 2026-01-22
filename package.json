@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-justcall",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "n8n community node to interact with JustCall Calls API",
   "keywords": [
     "n8n-community-node-package",
@@ -58,6 +58,7 @@
     "n8n-workflow": "*"
   },
   "overrides": {
-    "form-data": "^4.0.4"
+    "form-data": "^4.0.4",
+    "lodash": "^4.17.21"
   }
 }

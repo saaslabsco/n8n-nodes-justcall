@@ -1,4 +1,9 @@
-import { ICredentialType, INodeProperties } from 'n8n-workflow';
+import {
+	IAuthenticateGeneric,
+	ICredentialTestRequest,
+	ICredentialType,
+	INodeProperties,
+} from 'n8n-workflow';
 
 export class JustCallApi implements ICredentialType {
 	name = 'justCallApi';
@@ -28,4 +33,26 @@ export class JustCallApi implements ICredentialType {
 			description: 'The API Secret for JustCall API authentication',
 		},
 	];
+
+	authenticate: IAuthenticateGeneric = {
+		type: 'generic',
+		properties: {
+			headers: {
+				Authorization: '={{$credentials.apiKey}}:{{$credentials.apiSecret}}',
+				Accept: 'application/json',
+				'x-justcall-client': 'n8n',
+			},
+		},
+	};
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://api.justcall.io',
+			url: '/v2.1/users',
+			method: 'GET',
+			headers: {
+				'x-justcall-client': 'n8n',
+			},
+		},
+	};
 }
