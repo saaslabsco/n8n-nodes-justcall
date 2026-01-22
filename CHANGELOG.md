@@ -1,5 +1,11 @@
 # n8n-nodes-justcall
 
+## 1.0.3
+
+### Patch Changes
+
+- Added credential test
+
 ## 1.0.2
 
 ### Patch Changes
