@@ -38,6 +38,7 @@ export async function justcallApiRequest(
 			Authorization: `${credentials.apiKey}:${credentials.apiSecret}`,
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
+			'x-justcall-client': 'n8n',
 		},
 		...option,
 	};
