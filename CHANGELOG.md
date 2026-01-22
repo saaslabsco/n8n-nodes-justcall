@@ -1,5 +1,11 @@
 # n8n-nodes-justcall
 
+## 1.0.1
+
+### Patch Changes
+
+- d78d615: IN-8267: Adding justcall client header in api requests
+
 ## 1.0.0
 
 ### Major Changes
