@@ -4,6 +4,9 @@ bugfix:
 hotfix:
   - head-branch: ["^hotfix", "hotfix"]
 
+revert:
+  - head-branch: ["^revert", "revert"]
+
 feature:
   - head-branch: ["^feature", "feature"]
 
