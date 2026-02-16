@@ -15,8 +15,8 @@ checks:
     suggest: please check your commit message whether matches above regex
 
   - check: branch
-    regex: '^(?:revert-\d+-)?(?:bugfix|feature|release|hotfix|task|chore)\/[A-Z0-9]+-\d+-.*|master|main|HEAD|PR-\d+|dependabot\/.*|claude\/.*'
-    error: "Branches must begin with these types: bugfix/ feature/ release/ hotfix/ task/ chore/ followed by the JIRA_ISSUE_KEY and a hyphenated description or revert-<PR_NUMBER>-<BRANCH_NAME>"
+    regex: '^(?:revert-\d+-)?(?:bugfix|feature|release|hotfix|revert|task|chore)\/[A-Z0-9]+-\d+-.*|master|main|HEAD|PR-\d+|dependabot\/.*|claude\/.*'
+    error: "Branches must begin with these types: bugfix/ feature/ release/ hotfix/ revert/ task/ chore/ followed by the JIRA_ISSUE_KEY and a hyphenated description or revert-<PR_NUMBER>-<BRANCH_NAME>"
     suggest: run command `git checkout -b type/<JIRA_ISSUE_KEY>-<hyphenated-description>`
 
   - check: author_name
