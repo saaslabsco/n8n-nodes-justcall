@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-justcall)](https://www.npmjs.com/package/n8n-nodes-justcall)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An n8n community node package that provides seamless integration with the JustCall API, enabling you to automate calls, SMS, contact management, and AI voice agent interactions within your n8n workflows.
+An n8n community node package that provides seamless integration with the JustCall API, enabling you to automate calls, SMS, contact management, AI voice agents, Sales Dialer campaigns, and JustCall AI insights within your n8n workflows.
 
 ## Features
 
@@ -17,6 +17,9 @@ A comprehensive node for interacting with the JustCall API, supporting the follo
 - **Get** - Retrieve a specific call by ID
 - **Get Many** - List and filter calls with pagination support
 - **Update** - Update call notes, disposition, and rating
+- **Download Call Recording** - Download the recording of a completed call
+- **Get Call Journey** - Get journey details of a completed call (available after call has ended)
+- **Get Voice Agent Data** - Get voice agent insights and metadata for a completed call
 
 #### 💬 **SMS**
 - **Send** - Send SMS or MMS messages
@@ -36,6 +39,22 @@ A comprehensive node for interacting with the JustCall API, supporting the follo
 #### 🤖 **AI Voice Agent**
 - **List Agents** - List all available AI voice agents
 - **Initiate Call** - Initiate a call with an AI voice agent
+
+#### 📋 **Sales Dialer**
+- **List All Calls** - List all Sales Dialer calls with filters (campaign, agent, date range, etc.)
+- **Get a Call** - Get a specific Sales Dialer call by ID
+- **List All Campaigns** - List all Sales Dialer campaigns
+- **Get a Campaign** - Get a specific Sales Dialer campaign by ID
+- **List Campaign Contacts** - List contacts in a Sales Dialer campaign
+- **Add Contact to Campaign** - Add a contact to a Sales Dialer campaign (by phone number or contact ID)
+- **List All Contacts** - List all Sales Dialer contacts
+- **Get a Contact** - Get a specific Sales Dialer contact by ID
+
+#### 🧠 **JustCall AI**
+- **List Calls AI Data** - List AI-generated analysis for JustCall and Sales Dialer calls (summary, transcription, insights, action items)
+- **Get Call AI Data** - Get AI-generated analysis for a specific call
+- **List Meetings AI Data** - List AI-generated analysis for meeting instances
+- **Get Meeting AI Data** - Get AI-generated analysis for a specific meeting instance
 
 ### 2. JustCall Trigger Node
 
@@ -126,6 +145,24 @@ Initiate an outbound call using an AI voice agent:
 2. Select **AI Voice Agent** → **Initiate Call**
 3. Select the agent and provide the phone number
 4. Configure call parameters
+
+### Example 4: Sales Dialer – Add Contact to Campaign
+
+Add a contact to a Sales Dialer campaign for power dialing:
+
+1. Add a **JustCall** node
+2. Select **Sales Dialer** → **Add Contact to Campaign**
+3. Enter the campaign ID and either phone number or contact ID
+4. Optionally add contact details (name, email, custom fields)
+
+### Example 5: JustCall AI – Get Call Insights
+
+Retrieve AI-generated summary and insights for a call:
+
+1. Add a **JustCall** node
+2. Select **JustCall AI** → **Get Call AI Data**
+3. Enter the call ID (JustCall or Sales Dialer)
+4. Optionally enable summary, transcription, smart chapters, or action items
 
 ## Development
 

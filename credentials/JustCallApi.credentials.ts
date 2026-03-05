@@ -50,9 +50,6 @@ export class JustCallApi implements ICredentialType {
 			baseURL: 'https://api.justcall.io',
 			url: '/v2.1/users',
 			method: 'GET',
-			headers: {
-				'x-justcall-client': 'n8n',
-			},
 		},
 	};
 }

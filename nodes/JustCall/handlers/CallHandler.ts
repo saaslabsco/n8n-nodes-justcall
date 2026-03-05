@@ -1,5 +1,5 @@
 import { IExecuteFunctions, INodeExecutionData, IDataObject, NodeOperationError } from 'n8n-workflow';
-import { justcallApiRequest } from '../GenericFunctions';
+import { justcallApiRequest, justcallApiRequestBinary } from '../GenericFunctions';
 import { handlePaginatedRequest, createExecutionData, formatDateTime } from '../utils/helpers';
 
 export async function handleCallOperation(
@@ -13,6 +13,12 @@ export async function handleCallOperation(
 			return await handleGetManyCalls.call(this, i);
 		case 'get':
 			return await handleGetCall.call(this, i);
+		case 'getJourney':
+			return await handleGetCallJourney.call(this, i);
+		case 'getVoiceAgentData':
+			return await handleGetVoiceAgentData.call(this, i);
+		case 'downloadRecording':
+			return await handleDownloadCallRecording.call(this, i);
 		case 'update':
 			return await handleUpdateCall.call(this, i);
 		default:
@@ -88,6 +94,93 @@ async function handleGetCall(this: IExecuteFunctions, i: number): Promise<INodeE
 	);
 
 	return createExecutionData.call(this, responseData, i);
+}
+
+/**
+ * Get call journey - GET /v2.1/calls/{id}/journey
+ * Journey data is generated only after a call has ended.
+ */
+async function handleGetCallJourney(
+	this: IExecuteFunctions,
+	i: number,
+): Promise<INodeExecutionData[]> {
+	const callId = this.getNodeParameter('callId', i) as string;
+
+	if (!callId) {
+		throw new NodeOperationError(this.getNode(), 'Call ID is required', { itemIndex: i });
+	}
+
+	const responseData = await justcallApiRequest.call(
+		this,
+		'GET',
+		`/v2.1/calls/${callId}/journey`,
+		{},
+		{},
+	);
+
+	return createExecutionData.call(this, responseData, i);
+}
+
+/**
+ * Get voice agent data - GET /v2.1/calls/{id}/voice-agent
+ * Voice agent data is processed after the call ends.
+ */
+async function handleGetVoiceAgentData(
+	this: IExecuteFunctions,
+	i: number,
+): Promise<INodeExecutionData[]> {
+	const callId = this.getNodeParameter('callId', i) as string;
+
+	if (!callId) {
+		throw new NodeOperationError(this.getNode(), 'Call ID is required', { itemIndex: i });
+	}
+
+	const responseData = await justcallApiRequest.call(
+		this,
+		'GET',
+		`/v2.1/calls/${callId}/voice-agent`,
+		{},
+		{},
+	);
+
+	return createExecutionData.call(this, responseData, i);
+}
+
+/**
+ * Download call recording - GET /v2.1/calls/{id}/recording/download
+ * Recordings are available only after the call has ended.
+ */
+async function handleDownloadCallRecording(
+	this: IExecuteFunctions,
+	i: number,
+): Promise<INodeExecutionData[]> {
+	const callId = this.getNodeParameter('callId', i) as string;
+	const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+
+	if (!callId) {
+		throw new NodeOperationError(this.getNode(), 'Call ID is required', { itemIndex: i });
+	}
+
+	const buffer = await justcallApiRequestBinary.call(
+		this,
+		`/v2.1/calls/${callId}/recording/download`,
+	);
+
+	const binaryData = await this.helpers.prepareBinaryData(
+		buffer,
+		`call-recording-${callId}.mp3`,
+		'audio/mpeg',
+	);
+
+	return this.helpers.constructExecutionMetaData(
+		[
+			{
+				json: { callId, success: true },
+				binary: { [binaryPropertyName]: binaryData },
+			},
+		],
+		{ itemData: { item: i } },
+	);
 }
 
 async function handleUpdateCall(

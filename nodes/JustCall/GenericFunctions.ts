@@ -34,12 +34,6 @@ export async function justcallApiRequest(
 		qs,
 		url: `${JUSTCALL_BASE_URL}${endpoint}`,
 		json: true,
-		headers: {
-			Authorization: `${credentials.apiKey}:${credentials.apiSecret}`,
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			'x-justcall-client': 'n8n',
-		},
 		...option,
 	};
 
@@ -68,6 +62,7 @@ export async function justcallApiRequest(
 
 /**
  * Make an authenticated API request to JustCall and return all items
+ * @param perPage - Results per page (default 100). Use 20 for JustCall AI list APIs per API docs.
  */
 export async function justcallApiRequestAllItems(
 	this: IExecuteFunctions | IHookFunctions | ILoadOptionsFunctions,
@@ -76,12 +71,13 @@ export async function justcallApiRequestAllItems(
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
+	perPage = 100,
 ): Promise<any[]> {
 	const returnData: any[] = [];
 	let responseData;
 
 	qs.page = 0;
-	qs.per_page = 100;
+	qs.per_page = perPage;
 
 	let hasMorePages = true;
 
@@ -106,4 +102,49 @@ export async function justcallApiRequestAllItems(
 	}
 
 	return returnData;
+}
+
+/**
+ * Make an authenticated GET request to JustCall and return the response as a buffer (e.g. for file download)
+ */
+export async function justcallApiRequestBinary(
+	this: IExecuteFunctions | IHookFunctions | ILoadOptionsFunctions,
+	endpoint: string,
+): Promise<Buffer> {
+	const credentials = await this.getCredentials('justCallApi');
+
+	if (!credentials) {
+		throw new NodeApiError(this.getNode(), {
+			message: 'No credentials returned!',
+		} as JsonObject);
+	}
+
+	const options = {
+		method: 'GET' as const,
+		url: `${JUSTCALL_BASE_URL}${endpoint}`,
+		encoding: 'arraybuffer' as const,
+		headers: {
+			Authorization: `${credentials.apiKey}:${credentials.apiSecret}`,
+			'x-justcall-client': 'n8n',
+		},
+	};
+
+	try {
+		const response = await this.helpers.httpRequestWithAuthentication.call(
+			this,
+			'justCallApi',
+			options as any,
+		);
+		return Buffer.isBuffer(response) ? response : Buffer.from(response as ArrayBuffer);
+	} catch (error) {
+		const apiKey = credentials.apiKey as string;
+		const apiSecret = credentials.apiSecret as string;
+		if (error instanceof Error && error.message) {
+			error.message = error.message.replace(new RegExp(apiKey, 'g'), '***');
+			error.message = error.message.replace(new RegExp(apiSecret, 'g'), '***');
+		}
+		throw new NodeApiError(this.getNode(), error as JsonObject, {
+			message: error instanceof Error ? error.message : 'JustCall API request failed',
+		});
+	}
 }

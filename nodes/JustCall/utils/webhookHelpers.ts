@@ -1,4 +1,9 @@
+import { createHmac, timingSafeEqual } from 'crypto';
 import { IDataObject } from 'n8n-workflow';
+
+/** JustCall signature header names */
+export const JUSTCALL_SIGNATURE_HEADER = 'x-justcall-signature';
+export const JUSTCALL_TIMESTAMP_HEADER = 'x-justcall-request-timestamp';
 
 /**
  * Registration fields that should be excluded from call data extraction
@@ -212,5 +217,48 @@ export function isRegistrationCall(rawPayload: IDataObject, callData: IDataObjec
 	// Default: If we're not certain it's a registration call, treat it as a real event
 	// This ensures we don't accidentally filter out real events
 	return false;
+}
+
+/**
+ * Verify JustCall webhook signature (HMAC-SHA256).
+ * See: https://developer.justcall.io/docs/dynamic-webhook-signatures
+ *
+ * Payload to sign: `${secret}|${encodeURIComponent(webhook_url)}|${event_type}|${timestamp}`
+ * Signature: HMAC-SHA256(payload, secret) in hex
+ *
+ * @param apiSecret - API Secret from JustCall credentials
+ * @param webhookUrl - Webhook URL (from body or the registered URL)
+ * @param eventType - Event type from body (e.g. "call.completed")
+ * @param timestamp - Value from x-justcall-request-timestamp header
+ * @param receivedSignature - Value from x-justcall-signature header
+ * @returns true if the signature is valid
+ */
+export function verifyJustCallWebhookSignature(
+	apiSecret: string,
+	webhookUrl: string,
+	eventType: string,
+	timestamp: string,
+	receivedSignature: string,
+): boolean {
+	if (!apiSecret || !receivedSignature) {
+		return false;
+	}
+
+	const encodedWebhookUrl = encodeURIComponent(webhookUrl);
+	const payload = `${apiSecret}|${encodedWebhookUrl}|${eventType}|${timestamp}`;
+	const expectedSignature = createHmac('sha256', apiSecret).update(payload).digest('hex');
+
+	// Timing-safe comparison to avoid timing attacks
+	if (expectedSignature.length !== receivedSignature.length) {
+		return false;
+	}
+	try {
+		return timingSafeEqual(
+			Buffer.from(expectedSignature, 'hex'),
+			Buffer.from(receivedSignature, 'hex'),
+		);
+	} catch {
+		return false;
+	}
 }
 

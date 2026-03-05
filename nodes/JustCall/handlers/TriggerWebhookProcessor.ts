@@ -6,6 +6,9 @@ import {
 	buildEnrichedData,
 	normalizeDirection,
 	isRegistrationCall,
+	verifyJustCallWebhookSignature,
+	JUSTCALL_SIGNATURE_HEADER,
+	JUSTCALL_TIMESTAMP_HEADER,
 } from '../utils/webhookHelpers';
 
 /**
@@ -43,6 +46,47 @@ export async function processWebhook(
 				}),
 			],
 		};
+	}
+
+	// Verify webhook signature if enabled
+	const verifySignature = additionalFields.verifyWebhookSignature !== false;
+	if (verifySignature) {
+		const credentials = (await this.getCredentials('justCallApi')) as {
+			apiSecret?: string;
+		} | undefined;
+		const apiSecret = credentials?.apiSecret;
+		let req: { headers?: Record<string, string | string[] | undefined> };
+		try {
+			req = this.getRequestObject();
+		} catch {
+			req = {};
+		}
+		const headers = req.headers || {};
+		const getHeader = (name: string): string => {
+			const value = headers[name] ?? headers[name.toLowerCase()];
+			return Array.isArray(value) ? value[0] : (value as string) ?? '';
+		};
+		const receivedSignature = getHeader(JUSTCALL_SIGNATURE_HEADER).trim();
+		const timestamp = getHeader(JUSTCALL_TIMESTAMP_HEADER).trim();
+		const webhookUrl =
+			(rawPayload.webhook_url as string) || this.getNodeWebhookUrl('default') || '';
+		const eventType = (rawPayload.type as string) || (rawPayload.event as string) || '';
+
+		if (
+			!apiSecret ||
+			!receivedSignature ||
+			!timestamp ||
+			!webhookUrl ||
+			!eventType ||
+			!verifyJustCallWebhookSignature(apiSecret, webhookUrl, eventType, timestamp, receivedSignature)
+		) {
+			return {
+				webhookResponse: {
+					responseCode: 401,
+					responseBody: { error: 'Invalid webhook signature' },
+				},
+			};
+		}
 	}
 
 	// Extract event type and call data
