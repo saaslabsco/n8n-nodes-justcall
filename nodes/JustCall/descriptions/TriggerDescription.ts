@@ -88,6 +88,14 @@ export const triggerProperties: INodeProperties[] = [
 				default: 'inbound',
 				description: 'Only trigger for calls in this direction',
 			},
+			{
+				displayName: 'Verify Webhook Signature',
+				name: 'verifyWebhookSignature',
+				type: 'boolean',
+				default: true,
+				description:
+					'Whether to verify the webhook signature using your API Secret (recommended for production)',
+			},
 		],
 	},
 ];

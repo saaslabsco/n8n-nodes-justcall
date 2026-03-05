@@ -13,16 +13,34 @@ export const callOperations: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Download Call Recording',
+				value: 'downloadRecording',
+				description: 'Download the recording of a completed call',
+				action: 'Download call recording',
+			},
+			{
 				name: 'Get',
 				value: 'get',
 				description: 'Get a specific call',
 				action: 'Get a call',
 			},
 			{
+				name: 'Get Call Journey',
+				value: 'getJourney',
+				description: 'Get journey details of a completed call (available only after call has ended)',
+				action: 'Get call journey',
+			},
+			{
 				name: 'Get Many',
 				value: 'getMany',
 				description: 'Get many calls',
 				action: 'Get many calls',
+			},
+			{
+				name: 'Get Voice Agent Data',
+				value: 'getVoiceAgentData',
+				description: 'Get voice agent insights and metadata for a completed call',
+				action: 'Get voice agent data',
 			},
 			{
 				name: 'Update',
@@ -217,6 +235,73 @@ export const callFields: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The ID of the call to retrieve. You can use expressions like {{$JSON.call_id}} to get the call ID from a trigger node.',
+	},
+
+	// ----------------------------------
+	//         call:getJourney
+	// ----------------------------------
+	{
+		displayName: 'Call ID',
+		name: 'callId',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['call'],
+				operation: ['getJourney'],
+			},
+		},
+		default: '',
+		description: 'The ID of the completed call. Journey data is generated only after the call has ended.',
+	},
+
+	// ----------------------------------
+	//         call:getVoiceAgentData
+	// ----------------------------------
+	{
+		displayName: 'Call ID',
+		name: 'callId',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['call'],
+				operation: ['getVoiceAgentData'],
+			},
+		},
+		default: '',
+		description: 'The ID of the completed call. Voice agent data is processed after the call ends.',
+	},
+
+	// ----------------------------------
+	//         call:downloadRecording
+	// ----------------------------------
+	{
+		displayName: 'Call ID',
+		name: 'callId',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['call'],
+				operation: ['downloadRecording'],
+			},
+		},
+		default: '',
+		description: 'The ID of the completed call. Recordings are available only after the call has ended.',
+	},
+	{
+		displayName: 'Binary Property',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		displayOptions: {
+			show: {
+				resource: ['call'],
+				operation: ['downloadRecording'],
+			},
+		},
+		description: 'Name of the binary property to which to write the recording file',
 	},
 
 	// ----------------------------------

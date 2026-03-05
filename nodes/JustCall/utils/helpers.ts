@@ -1,22 +1,28 @@
 import { IExecuteFunctions, INodeExecutionData, IDataObject } from 'n8n-workflow';
 import { justcallApiRequest, justcallApiRequestAllItems } from '../GenericFunctions';
 
+/** Default per_page when fetching all (used when maxPerPage not specified) */
+const DEFAULT_PER_PAGE = 100;
+
 /**
- * Helper function to handle paginated GET requests
+ * Helper function to handle paginated GET requests.
+ * For APIs with a per_page cap (e.g. JustCall AI: 20), pass maxPerPage. Otherwise limit is sent as-is.
  */
 export async function handlePaginatedRequest(
 	this: IExecuteFunctions,
 	endpoint: string,
 	qs: IDataObject,
 	i: number,
+	maxPerPage?: number,
 ): Promise<any[]> {
 	const returnAll = this.getNodeParameter('returnAll', i);
 
 	if (returnAll) {
-		return await justcallApiRequestAllItems.call(this, 'data', 'GET', endpoint, {}, qs);
+		const perPage = maxPerPage ?? DEFAULT_PER_PAGE;
+		return await justcallApiRequestAllItems.call(this, 'data', 'GET', endpoint, {}, qs, perPage);
 	} else {
-		const limit = this.getNodeParameter('limit', i);
-		qs.per_page = limit;
+		const limit = this.getNodeParameter('limit', i) as number;
+		qs.per_page = maxPerPage !== undefined ? Math.min(limit, maxPerPage) : limit;
 		qs.page = 0;
 		const response = await justcallApiRequest.call(this, 'GET', endpoint, {}, qs);
 		return response.data || [];

@@ -1,6 +1,13 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export type Resource = 'call' | 'sms' | 'contact' | 'phoneNumber' | 'aiVoiceAgent';
+export type Resource =
+	| 'call'
+	| 'sms'
+	| 'contact'
+	| 'phoneNumber'
+	| 'aiVoiceAgent'
+	| 'salesDialer'
+	| 'justCallAi';
 
 export type CallOperation = 'get' | 'getMany' | 'update';
 export type AiVoiceAgentOperation = 'listAgents' | 'initiateCall';

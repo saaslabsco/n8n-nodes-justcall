@@ -15,6 +15,14 @@ import {
 	aiVoiceAgentOperations,
 	aiVoiceAgentFields,
 } from './descriptions/AiVoiceAgentDescription';
+import {
+	salesDialerOperations,
+	salesDialerFields,
+} from './descriptions/SalesDialerDescription';
+import {
+	justCallAiOperations,
+	justCallAiFields,
+} from './descriptions/JustCallAiDescription';
 
 // Import operation handlers
 import { handleCallOperation } from './handlers/CallHandler';
@@ -22,6 +30,8 @@ import { handleSmsOperation } from './handlers/SmsHandler';
 import { handleContactOperation } from './handlers/ContactHandler';
 import { handlePhoneNumberOperation } from './handlers/PhoneNumberHandler';
 import { handleAiVoiceAgentOperation } from './handlers/AiVoiceAgentHandler';
+import { handleSalesDialerOperation } from './handlers/SalesDialerHandler';
+import { handleJustCallAiOperation } from './handlers/JustCallAiHandler';
 
 import type { Resource } from './types';
 
@@ -33,10 +43,12 @@ export class JustCall implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',
-		description: 'Interact with JustCall API (Calls, SMS, Contacts, Phone Numbers, AI Voice Agents)',
+		description:
+			'Interact with JustCall API (Calls, SMS, Contacts, Phone Numbers, AI Voice Agents, Sales Dialer, JustCall AI)',
 		defaults: {
 			name: 'JustCall',
 		},
+		usableAsTool: true,
 		inputs: ['main'],
 		outputs: ['main'],
 		credentials: [
@@ -66,8 +78,16 @@ export class JustCall implements INodeType {
 						value: 'contact',
 					},
 					{
+						name: 'JustCall AI',
+						value: 'justCallAi',
+					},
+					{
 						name: 'Phone Number',
 						value: 'phoneNumber',
+					},
+					{
+						name: 'Sales Dialer',
+						value: 'salesDialer',
 					},
 					{
 						name: 'SMS',
@@ -87,6 +107,10 @@ export class JustCall implements INodeType {
 			...phoneNumberFields,
 			...aiVoiceAgentOperations,
 			...aiVoiceAgentFields,
+			...salesDialerOperations,
+			...salesDialerFields,
+			...justCallAiOperations,
+			...justCallAiFields,
 		],
 	};
 
@@ -115,6 +139,12 @@ export class JustCall implements INodeType {
 						break;
 					case 'aiVoiceAgent':
 						executionData = await handleAiVoiceAgentOperation.call(this, operation, i);
+						break;
+					case 'salesDialer':
+						executionData = await handleSalesDialerOperation.call(this, operation, i);
+						break;
+					case 'justCallAi':
+						executionData = await handleJustCallAiOperation.call(this, operation, i);
 						break;
 					default:
 						throw new NodeOperationError(this.getNode(), `Unknown resource: ${resource}`, {
