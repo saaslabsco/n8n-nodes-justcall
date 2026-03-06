@@ -1,5 +1,11 @@
 # n8n-nodes-justcall
 
+## 1.0.4
+
+### Patch Changes
+
+- Added sales dialer and AI actions
+
 ## 1.0.3
 
 ### Patch Changes
