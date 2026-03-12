@@ -1,6 +1,6 @@
 checks:
   - check: message
-    regex: '^(?:Revert .+|(?:(feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert|security|task): )?[A-Z][A-Z0-9]+-\d+: .+(?:\n\n.*(?:\n.*)*)?$)|Merge.+$'
+    regex: '^(?:(?:Revert .+|(?:(feat|fix|perf|refactor|docs|style|test|build|ci|chore|revert|security|task): )?[A-Z][A-Z0-9]+-\d+: .+(?:\n\n.*(?:\n.*)*)?$)|Merge.+)$'
     error: |
       The commit message should be structured as follows:
 
