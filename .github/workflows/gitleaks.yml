@@ -1,0 +1,13 @@
+name: Validate Gitleaks
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - master
+
+jobs:
+  gitleaks:
+    uses: saaslabsco/ci-workflows/.github/workflows/gitleaks-reusable.yml@master
+    name: Gitleaks
+    secrets: inherit
