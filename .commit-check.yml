@@ -25,6 +25,6 @@ checks:
     suggest: run command `git config user.name "Your Name"`
 
   - check: author_email
-    regex: ^(?:.+@saaslabs.co)|(?:.+saas-labs-sherlock\[bot\].+)|(?:.+dependabot.+)$
+    regex: ^(?:.+@saaslabs.co)|(?:.+cursoragent.+)|(?:.+saas-labs-sherlock\[bot\].+)|(?:.+dependabot.+)$
     error: The committer email seems invalid
     suggest: run command `git config user.email officialemail@saaslabs.co`
